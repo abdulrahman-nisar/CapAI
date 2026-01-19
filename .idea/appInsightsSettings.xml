@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.capai" />
+                  <option name="mobileSdkAppId" value="1:593845288565:android:3a239321920b5e3b7d823c" />
+                  <option name="projectId" value="capai-862a5" />
+                  <option name="projectNumber" value="593845288565" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

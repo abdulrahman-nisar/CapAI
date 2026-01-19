@@ -4,44 +4,60 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.capai.ui.screen.SelectImageScreen
+import com.example.capai.ui.CapAiViewModel
 import com.example.capai.ui.theme.CapAiTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             CapAiTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val viewModel: CapAiViewModel = viewModel()
+                SelectImageScreen(viewModel)
+    //
+//                Scaffold { innerPadding ->
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(innerPadding)
+//                    ) {
+//                        var caption by remember { mutableStateOf<String?>(null) }
+//                        val con text = LocalContext.current
+//                        var URI by remember { mutableStateOf<Uri?>(null) }
+//                        val capAI by viewModel.capAI
+//
+
+//                        Button (onClick = {
+//                            URI = null
+//                        }) {
+//                            Text(text = "Pick Image")
+//                        }
+//                        LaunchedEffect(URI) {
+//                            URI?.let {
+//                                viewModel.getImageCaption(it, context, Length.SHORT)
+//                            }
+//                        }
+//
+//                        LaunchedEffect(capAI) {
+//                            capAI?.let {
+//                                caption = it.instagramCaption
+//
+//                            }
+//
+//                        }
+//
+//                        Text(caption?:"loading")
+//
+//                    }
+//                }
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CapAiTheme {
-        Greeting("Android")
-    }
-}
