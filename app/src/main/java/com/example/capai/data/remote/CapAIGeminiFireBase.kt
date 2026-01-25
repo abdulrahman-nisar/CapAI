@@ -1,11 +1,11 @@
-package com.example.capai.Data.remote
+package com.example.capai.data.remote
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import com.example.capai.Model.CapAI
-import com.example.capai.Model.Length
+import com.example.capai.domain.model.CapAI
+import com.example.capai.domain.model.Length
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
@@ -52,7 +52,7 @@ class CapAIGeminiFireBase @Inject constructor() {
 
     private suspend fun _generateResult(bitmap: Bitmap, length: String, platform: String): String? {
         val model = Firebase.ai(backend = GenerativeBackend.Companion.googleAI())
-            .generativeModel("gemini-2.5-flash")
+            .generativeModel("gemini-2.5-flash-lite")
         val prompt = content {
             image(bitmap)
             text(
@@ -65,7 +65,6 @@ class CapAIGeminiFireBase @Inject constructor() {
         }
 
         return model.generateContent(prompt).text ?: "Error generating caption for $platform"
-
 
     }
 

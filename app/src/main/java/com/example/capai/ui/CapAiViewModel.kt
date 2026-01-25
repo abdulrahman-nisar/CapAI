@@ -6,27 +6,29 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.capai.Data.repository.CapAIRepository
-import com.example.capai.Model.CapAI
-import com.example.capai.Model.Length
+import com.example.capai.domain.model.CapAI
+import com.example.capai.domain.model.CaptionResult
+import com.example.capai.domain.model.Length
+import com.example.capai.domain.repository.CapAiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CapAiViewModel @Inject constructor(private val _capAIRepository : CapAIRepository) :
+class CapAiViewModel @Inject constructor(private val _capAIRepository : CapAiRepository) :
     ViewModel(){
-
-    private val _capAI = mutableStateOf<CapAI?>(null)
-    var capAI : State<CapAI?> = _capAI
-    var imageUri = mutableStateOf<Uri?>(null)
-    fun getImageCaption(context: Context, length: Length)
-    {
+    private val _result = MutableStateFlow(CaptionResult())
+    var result = _result.asStateFlow()
+    var imageUri = MutableStateFlow<Uri?>(null)
+    fun getImageCaption(context: Context, length: Length) {
+        _result.value.isGenerating = true
         viewModelScope.launch {
-            _capAI.value = _capAIRepository.getImageCaption(imageUri.value, length, context)
+            _result.value.capAI = _capAIRepository.getImageCaption(imageUri.value, length, context)
         }
-
+        if(_result.value.capAI != null){
+            _result.value.isGenerating = false
+        }
     }
-
-
 }
