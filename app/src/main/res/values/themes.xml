@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.CapAi" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.CapAi.Starting" parent="Theme.SplashScreen" tools:ignore="MissingPrefix">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/imageselect</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.CapAi</item>
+    </style>
 </resources>

@@ -32,6 +32,7 @@ class CapAIGeminiFireBase @Inject constructor() {
 
             val Result = CapAI(
                 image = bitmap,
+                imageUri = uri,
                 instagramCaption = _generateResult(bitmap, promptLength, "Instagram"),
                 facebookCaption = _generateResult(bitmap, promptLength, "Facebook"),
                 twitterCaption = _generateResult(bitmap, promptLength, "Twitter"),

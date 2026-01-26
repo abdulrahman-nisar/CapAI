@@ -2,8 +2,6 @@ package com.example.capai.ui
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.capai.domain.model.CapAI
@@ -22,13 +20,40 @@ class CapAiViewModel @Inject constructor(private val _capAIRepository : CapAiRep
     private val _result = MutableStateFlow(CaptionResult())
     var result = _result.asStateFlow()
     var imageUri = MutableStateFlow<Uri?>(null)
+    private val _historyList = MutableStateFlow<List<CapAI>>(emptyList())
+    val historyList = _historyList.asStateFlow()
+
+    init {
+       getHistoryList()
+    }
+
+    fun prepareForCaptionGeneration() {
+        // Reset result and set loading state before navigating to DetailsScreen
+        _result.value = CaptionResult(isGenerating = true)
+    }
+
     fun getImageCaption(context: Context, length: Length) {
-        _result.value.isGenerating = true
         viewModelScope.launch {
-            _result.value.capAI = _capAIRepository.getImageCaption(imageUri.value, length, context)
+            _result.value = _result.value.copy(isGenerating = true)
+            val caption = _capAIRepository.getImageCaption(imageUri.value, length, context)
+            _result.value = _result.value.copy(capAI = caption, isGenerating = false)
+            if(caption != null){
+                addCaptionToHistory(caption)
+            }
         }
-        if(_result.value.capAI != null){
-            _result.value.isGenerating = false
+    }
+
+    fun addCaptionToHistory(capAI: CapAI){
+        viewModelScope.launch {
+            _capAIRepository.insertCapAI(capAI,imageUri.value!!)
+        }
+    }
+
+    private fun getHistoryList(){
+        viewModelScope.launch {
+            _capAIRepository.getAllCaptions().collect {
+                _historyList.value = it
+            }
         }
     }
 }

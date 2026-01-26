@@ -1,6 +1,7 @@
 package com.example.capai.ui.screen
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,11 @@ fun CaptionPreferencesScreen(
     onBackArrowClick: () -> Unit,
     onGenerateCaptionClick : (selectedLength : Length) -> Unit
 ) {
+    // Intercept system back button to behave like arrow button
+    BackHandler {
+        onBackArrowClick()
+    }
+
     var selectedIndex by remember { mutableIntStateOf(0) }
     var selectedLength by remember { mutableStateOf(Length.SHORT) }
     val options = listOf("Short", "Long")
@@ -155,6 +161,7 @@ fun CaptionPreferencesScreen(
 
             Button(
                 onClick = {
+                    viewModel.prepareForCaptionGeneration()
                     onGenerateCaptionClick(selectedLength)
                 },
                 modifier = Modifier

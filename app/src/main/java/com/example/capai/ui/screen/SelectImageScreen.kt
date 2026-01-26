@@ -1,5 +1,6 @@
 package com.example.capai.ui.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,10 +45,24 @@ fun SelectImageScreen(
     viewModel: CapAiViewModel,
     onBackArrowClick : () -> Unit,
     onSucessfulImagePick : () -> Unit){
+
+    // Intercept system back button to behave like arrow button
+    BackHandler {
+        onBackArrowClick()
+    }
+
     val context = LocalContext.current
     val pickMedia =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
+                try {
+                    context.contentResolver.takePersistableUriPermission(
+                        uri,
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
+                }
                 viewModel.imageUri.value = uri
                 onSucessfulImagePick()
             } else {

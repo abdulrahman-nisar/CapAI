@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity("captions")
 data class CaptionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
