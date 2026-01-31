@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     ksp("com.google.dagger:hilt-android-compiler:2.56.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
-    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-ai")
     implementation("androidx.compose.material:material-icons-extended")

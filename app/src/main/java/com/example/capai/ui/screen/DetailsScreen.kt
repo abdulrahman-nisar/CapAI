@@ -67,6 +67,7 @@ import coil.compose.AsyncImage
 import com.example.capai.R
 import com.example.capai.domain.model.Length
 import com.example.capai.ui.CapAiViewModel
+import com.example.capai.ui.screen.components.ShareImageAndCaption
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -391,6 +392,19 @@ fun DetailsScreen(
 
                             Button(
                                 onClick = {
+                                    clipBoardManager.setText(
+                                        annotatedString = selectedCaption
+                                    )
+                                    scope.launch {
+                                        snackBarHostState.showSnackbar(
+                                            "Caption copied to clipboard",
+                                            withDismissAction = true)
+                                    }
+                                    ShareImageAndCaption(
+                                        context,
+                                        viewModel.imageUri.value!!,
+                                        selectedCaption.text
+                                    )
                                 },
                                 modifier = Modifier
                                     .weight(1f),
