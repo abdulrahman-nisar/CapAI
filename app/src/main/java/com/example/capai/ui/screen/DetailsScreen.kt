@@ -1,5 +1,6 @@
 package com.example.capai.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -18,10 +19,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -31,7 +34,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -52,22 +57,26 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.capai.R
 import com.example.capai.domain.model.Length
 import com.example.capai.ui.CapAiViewModel
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     viewModel: CapAiViewModel,
     selectedLength: Length,
-    onBackArrowClick: () -> Unit
+    onBackArrowClick: () -> Unit,
+    onIsSuccessFalse : () -> Unit
 ){
     val imageHeight = 400.dp
     val result by viewModel.result.collectAsState()
@@ -76,6 +85,7 @@ fun DetailsScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var selectedCaption = remember { AnnotatedString("") }
+    val scrollState = rememberScrollState()
     BackHandler {
         onBackArrowClick()
     }
@@ -85,7 +95,15 @@ fun DetailsScreen(
     }
     Scaffold(
         snackbarHost = {
-            SnackbarHost(snackBarHostState)
+            SnackbarHost(snackBarHostState){ snackbarData ->
+                Snackbar(
+                    snackbarData = snackbarData,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    actionColor = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(16.dp)
+                )
+            }
         },
         topBar = {
             TopAppBar(
@@ -177,6 +195,14 @@ fun DetailsScreen(
                     )
                 }
             }
+        }else if(result.capAI?.isSuccess == false){
+            scope.launch {
+                snackBarHostState.showSnackbar(
+                    result.capAI?.errorMessage ?: "Failed to generate captions",
+                    withDismissAction = true)
+                onIsSuccessFalse()
+            }
+
         } else {
         Column(
             modifier = Modifier
@@ -240,14 +266,68 @@ fun DetailsScreen(
                         ) {
                             Column(
                                 modifier = Modifier
-                                    .padding(12.dp)
                                     .fillMaxWidth(),
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.Start
                             ) {
-                                Text(text = platform, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(text = captionText, fontSize = 14.sp)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .background(color = when(platform) {
+                                            "Instagram" -> Color(0xFFDA5D88)
+                                            "Facebook" -> Color(0xFF1877F2)
+                                            "Twitter" -> Color(0xFF1DA1F2)
+                                            "Pinterest" -> Color(0xFFE60023)
+                                            "LinkedIn" -> Color(0xFF0A66C2)
+                                            "Threads" -> Color(0xFF000000)
+                                            "Snapchat" -> Color(0xFFFFC107)
+                                            "TikTok" -> Color(0xFF000000)
+                                            else -> Color(0xFFE1306C)
+                                        }),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start
+                                ) {
+                                    Icon(
+                                        painter = when (platform) {
+                                            "Instagram" -> painterResource(id = R.mipmap.instagram_foreground)
+                                            "Facebook" -> painterResource(id = R.mipmap.facebook_foreground)
+                                            "Twitter" -> painterResource(id = R.mipmap.twitter_foreground)
+                                            "Pinterest" -> painterResource(id = R.mipmap.pinterest_foreground)
+                                            "LinkedIn" -> painterResource(id = R.mipmap.linkldin_foreground)
+                                            "Threads" -> painterResource(id = R.mipmap.threads_foreground)
+                                            "Snapchat" -> painterResource(id = R.mipmap.snapchat_foreground)
+                                            "TikTok" -> painterResource(id = R.mipmap.tiktok_foreground)
+                                            else -> painterResource(id = R.mipmap.instagram_foreground)
+                                        },
+                                        contentDescription = "$platform Icon",
+                                        modifier = Modifier.size(40.dp),
+                                        tint = Color.Unspecified
+                                    )
+                                    Spacer(modifier = Modifier.size(8.dp))
+                                    Text(text = platform, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                }
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = when(platform) {
+                                                "Instagram" -> Color(0xFFA86C80)
+                                                "Facebook" -> Color(0xFF688BC8)
+                                                "Twitter" -> Color(0xFF4D93B1)
+                                                "Pinterest" -> Color(0xFFAA5E6E)
+                                                "LinkedIn" -> Color(0xFF6186B3)
+                                                "Threads" -> Color(0xFF635353)
+                                                "Snapchat" -> Color(0xFFA1996D)
+                                                "TikTok" -> Color(0xFF4C4141)
+                                                else -> Color(0xFFFFE6F0)
+                                            }
+                                        )
+                                ){
+                                    Text(text = captionText, fontSize = 14.sp,
+                                        textAlign = TextAlign.Justify,
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .fillMaxSize()
+                                            .verticalScroll(scrollState))
+                                }
                             }
                         }
                     }
@@ -270,8 +350,9 @@ fun DetailsScreen(
                                 }
                                 Box(
                                     modifier = Modifier
-                                        .size(if (selected) 12.dp else 8.dp)
-                                        .clip(CircleShape)
+                                        .clip(RoundedCornerShape(50))
+                                        .width(if (selected) 24.dp else 12.dp)
+                                        .height(4.dp)
                                         .background(
                                             if (selected) Color(0xFF1948a6) else Color(0xFFE0E0E0)
                                         )
@@ -310,7 +391,6 @@ fun DetailsScreen(
 
                             Button(
                                 onClick = {
-                                    // Share logic
                                 },
                                 modifier = Modifier
                                     .weight(1f),

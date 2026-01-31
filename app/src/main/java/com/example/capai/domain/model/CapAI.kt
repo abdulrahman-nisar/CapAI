@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 
 data class CapAI(
+    var id: Int = 0,
     var image: Bitmap? = null,
     var instagramCaption: String? = "",
     var facebookCaption: String? = "",
@@ -13,5 +14,7 @@ data class CapAI(
     var threadCaption: String? = "",
     var snapChatCaption: String? = "",
     var tiktokCaption: String? = "",
-    var imageUri : Uri? = null
+    var imageUri : Uri? = null,
+    var isSuccess: Boolean = false,
+    var errorMessage: String? = null
 )

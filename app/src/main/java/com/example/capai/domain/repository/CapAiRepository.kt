@@ -10,4 +10,6 @@ interface CapAiRepository {
     suspend fun getImageCaption(uri: Uri?, length: Length, context: Context) : CapAI?
     suspend fun insertCapAI(capAI: CapAI, imageUri: Uri)
     fun getAllCaptions() : Flow<List<CapAI>>
+
+    suspend fun deleteCapAI(capAI: CapAI)
 }

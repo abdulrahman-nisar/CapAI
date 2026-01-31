@@ -2,16 +2,17 @@ package com.example.capai.ui.screen
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.capai.domain.model.CapAI
+import com.example.capai.ui.screen.component.ShareImageAndCaption
+import com.google.firebase.ai.type.content
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +70,7 @@ fun HomeDetailsScreen(
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     var selectedCaption = remember { AnnotatedString("") }
+    val context = LocalContext.current
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackBarHostState)
@@ -204,6 +209,7 @@ fun HomeDetailsScreen(
                         }
                         Box(
                             modifier = Modifier
+                                .fillMaxSize()
                                 .background(
                                     color = when(platform) {
                                         "Instagram" -> Color(0xFFA86C80)
@@ -245,8 +251,9 @@ fun HomeDetailsScreen(
                             }
                             Box(
                                 modifier = Modifier
-                                    .size(if (selected) 12.dp else 8.dp)
-                                    .clip(CircleShape)
+                                    .clip(RoundedCornerShape(50))
+                                    .width(if (selected) 24.dp else 12.dp)
+                                    .height(4.dp)
                                     .background(
                                         if (selected) Color(0xFF1948a6) else Color(0xFFE0E0E0)
                                     )
@@ -270,7 +277,9 @@ fun HomeDetailsScreen(
                                     annotatedString = selectedCaption
                                 )
                                 scope.launch {
-                                    snackBarHostState.showSnackbar("Caption copied to clipboard")
+                                    snackBarHostState.showSnackbar(
+                                        "Caption copied to clipboard",
+                                        withDismissAction = true)
                                 }
                             },
                             modifier = Modifier
@@ -286,7 +295,19 @@ fun HomeDetailsScreen(
 
                         Button(
                             onClick = {
-                                // Share logic
+                                clipBoardManager.setText(
+                                    annotatedString = selectedCaption
+                                )
+                                scope.launch {
+                                    snackBarHostState.showSnackbar(
+                                        "Caption copied to clipboard",
+                                        withDismissAction = true)
+                                }
+                                ShareImageAndCaption(
+                                    context,
+                                    capAi.imageUri!!,
+                                    selectedCaption.text
+                                )
                             },
                             modifier = Modifier
                                 .weight(1f)
@@ -299,8 +320,6 @@ fun HomeDetailsScreen(
                             )
                         }
                     }
-
-
 
             }
         }

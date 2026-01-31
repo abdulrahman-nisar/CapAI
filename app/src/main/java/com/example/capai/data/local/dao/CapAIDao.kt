@@ -1,6 +1,5 @@
 package com.example.capai.data.local.dao
 
-import android.graphics.Paint
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -16,4 +15,7 @@ abstract class CapAIDao {
 
     @Query("SELECT * FROM captions ORDER BY timestamp DESC")
     abstract fun getAllCaptions() : Flow<List<CaptionEntity>>
+
+    @Query("DELETE FROM captions WHERE id = :id")
+    abstract suspend fun deleteCapAI(id: Int)
 }

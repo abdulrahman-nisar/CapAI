@@ -25,48 +25,61 @@ class CapAIGeminiFireBase @Inject constructor() {
             val inputStream = contentResolver.openInputStream(uri)
             val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream?.close()
-            var promptLength = when(length) {
+            val promptLength = when(length) {
                 Length.SHORT -> "short"
                 Length.LONG -> "long"
             }
 
-            val Result = CapAI(
-                image = bitmap,
-                imageUri = uri,
-                instagramCaption = _generateResult(bitmap, promptLength, "Instagram"),
-                facebookCaption = _generateResult(bitmap, promptLength, "Facebook"),
-                twitterCaption = _generateResult(bitmap, promptLength, "Twitter"),
-                pinterestCaption = _generateResult(bitmap, promptLength, "Pinterest"),
-                linkedinCaption = _generateResult(bitmap, promptLength, "LinkedIn"),
-                threadCaption = _generateResult(bitmap, promptLength, "Threads"),
-                snapChatCaption = _generateResult(bitmap, promptLength, "Snapchat"),
-                tiktokCaption = _generateResult(bitmap, promptLength, "TikTok")
-            )
+            try{
+                val Result = CapAI(
+                    image = bitmap,
+                    imageUri = uri,
+                    instagramCaption = _generateResult(bitmap, promptLength, "Instagram"),
+                    facebookCaption = _generateResult(bitmap, promptLength, "Facebook"),
+                    twitterCaption = _generateResult(bitmap, promptLength, "Twitter"),
+                    pinterestCaption = _generateResult(bitmap, promptLength, "Pinterest"),
+                    linkedinCaption = _generateResult(bitmap, promptLength, "LinkedIn"),
+                    threadCaption = _generateResult(bitmap, promptLength, "Threads"),
+                    snapChatCaption = _generateResult(bitmap, promptLength, "Snapchat"),
+                    tiktokCaption = _generateResult(bitmap, promptLength, "TikTok"),
+                    isSuccess = true
+                )
+                return Result
+            }catch (e: Exception) {
+                return CapAI(
+                    isSuccess = false,
+                    errorMessage = e.message ?: "Unknown error occurred"
+                )
+            }
 
-            return Result
         }
 
-        return null
+        return CapAI(
+            isSuccess = false,
+            errorMessage = "Image URI is null"
+        )
 
 
     }
 
-    private suspend fun _generateResult(bitmap: Bitmap, length: String, platform: String): String? {
-        val model = Firebase.ai(backend = GenerativeBackend.Companion.googleAI())
-            .generativeModel("gemini-2.5-flash-lite")
-        val prompt = content {
-            image(bitmap)
-            text(
-                "Generate a $length caption for the given image that is suitable for posting" +
-                        " on $platform. Be specific and directly give the final caption. Do not include" +
-                        " explanations, suggestions, or any formatting like bold or italics. I will " +
-                        "directly use the result, so only return the caption text."
-            )
+    private suspend fun _generateResult(bitmap: Bitmap, length: String, platform: String): String {
 
+        return try {
+            val model = Firebase.ai(backend = GenerativeBackend.googleAI())
+                .generativeModel("gemini-2.5-flash-lite")
+            val prompt = content {
+                image(bitmap)
+                text(
+                    "Generate a $length caption for the given image that is suitable for posting" +
+                            " on $platform. Be specific and directly give the final caption. Do not include" +
+                            " explanations, suggestions, or any formatting like bold or italics. I will " +
+                            "directly use the result, so only return the caption text."
+                )
+
+            }
+            model.generateContent(prompt).text ?: "Error generating caption for $platform"
+        }catch (e: Exception) {
+           throw e
         }
-
-        return model.generateContent(prompt).text ?: "Error generating caption for $platform"
-
     }
-
 }

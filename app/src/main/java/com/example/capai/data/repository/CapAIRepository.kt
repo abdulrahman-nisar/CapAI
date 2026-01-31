@@ -2,7 +2,6 @@ package com.example.capai.data.repository
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import com.example.capai.data.local.dao.CapAIDao
 import com.example.capai.data.local.entity.CaptionEntity
@@ -10,7 +9,6 @@ import com.example.capai.data.remote.CapAIGeminiFireBase
 import com.example.capai.domain.model.CapAI
 import com.example.capai.domain.model.Length
 import com.example.capai.domain.repository.CapAiRepository
-import com.google.firebase.Timestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -27,7 +25,7 @@ class CapAIRepositoryImpl @Inject constructor(
     override suspend fun insertCapAI(capAI: CapAI, imageUri : Uri) {
         dao.addCaption(CaptionEntity(
             imageUri = imageUri.toString(),
-            timestamp = System.currentTimeMillis().toLong(),
+            timestamp = System.currentTimeMillis(),
             id = 0,
             instagramCaption = capAI.instagramCaption!!,
             facebookCaption = capAI.facebookCaption!!,
@@ -44,6 +42,7 @@ class CapAIRepositoryImpl @Inject constructor(
         return dao.getAllCaptions().map { list ->
             list.map { entity ->
                 CapAI(
+                    id = entity.id,
                     imageUri = entity.imageUri.toUri(),
                     instagramCaption = entity.instagramCaption,
                     facebookCaption = entity.facebookCaption,
@@ -56,6 +55,10 @@ class CapAIRepositoryImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override suspend fun deleteCapAI(capAI: CapAI) {
+        dao.deleteCapAI(capAI.id)
     }
 
 }

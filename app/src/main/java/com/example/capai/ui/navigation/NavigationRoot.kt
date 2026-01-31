@@ -91,6 +91,9 @@ fun NavigationRoot(viewModel: CapAiViewModel) {
                         backStack.removeLast()
                         backStack.removeLast()
                         backStack.removeLast()
+                    },
+                    onIsSuccessFalse = {
+                        backStack.removeLast()
                     }
                 )
             }
