@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -50,8 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.capai.domain.model.CapAI
-import com.example.capai.ui.screen.component.ShareImageAndCaption
-import com.google.firebase.ai.type.content
+import com.example.capai.ui.screen.components.ShareImageAndCaption
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -46,7 +46,6 @@ fun SelectImageScreen(
     onBackArrowClick : () -> Unit,
     onSucessfulImagePick : () -> Unit){
 
-    // Intercept system back button to behave like arrow button
     BackHandler {
         onBackArrowClick()
     }

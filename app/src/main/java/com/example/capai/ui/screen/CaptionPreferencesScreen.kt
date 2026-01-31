@@ -56,7 +56,6 @@ fun CaptionPreferencesScreen(
     onBackArrowClick: () -> Unit,
     onGenerateCaptionClick : (selectedLength : Length) -> Unit
 ) {
-    // Intercept system back button to behave like arrow button
     BackHandler {
         onBackArrowClick()
     }

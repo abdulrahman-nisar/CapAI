@@ -13,7 +13,7 @@ sealed interface Route : NavKey{
     @Serializable
     data object CaptionPreferencesScreen : Route, NavKey
     @Serializable
-    data class DetailsScreen(val seletedLength: Length) : Route, NavKey
+    data class DetailsScreen(val selectedLength: Length) : Route, NavKey
     @Serializable
     data class HomeDetailsScreen(val itemIndex: Int) : Route, NavKey
 }

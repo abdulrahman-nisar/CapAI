@@ -1,4 +1,4 @@
-package com.example.capai.ui.screen.component
+package com.example.capai.ui.screen.components
 
 import android.content.Intent
 import androidx.compose.foundation.background

@@ -35,8 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.capai.ui.CapAiViewModel
-import com.example.capai.ui.screen.component.DrawerContent
-import com.example.capai.ui.screen.component.HistoryListItem
+import com.example.capai.ui.screen.components.DrawerContent
+import com.example.capai.ui.screen.components.HistoryListItem
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

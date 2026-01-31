@@ -86,7 +86,7 @@ fun NavigationRoot(viewModel: CapAiViewModel) {
             entry <Route.DetailsScreen> { len->
                 DetailsScreen(
                     viewModel = viewModel,
-                    len.seletedLength,
+                    len.selectedLength,
                     onBackArrowClick = {
                         backStack.removeLast()
                         backStack.removeLast()
