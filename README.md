@@ -363,17 +363,12 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
 
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [abdulrahman-nisar](https://github.com/abdulrahman-nisar)
+- Email: abdulrahmannisar6@gmail.com
 
 ---
 
@@ -383,24 +378,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Jetpack Compose** team for the amazing UI toolkit
 - **Material Design** for design guidelines
 - **Android Developer Community** for continuous support
-
----
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/yourusername/CapAi/issues) page
-2. Create a new issue with detailed information
-3. Reach out via email
-
----
-
-## 📊 Project Status
-
-**Current Version**: 1.0.0  
-**Status**: Active Development  
-**Last Updated**: January 2026
 
 ---
 
